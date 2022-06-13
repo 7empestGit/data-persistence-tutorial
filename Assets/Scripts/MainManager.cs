@@ -30,6 +30,7 @@ public class MainManager : MonoBehaviour
   void Start ()
   {
     PlayerNameText.text = $"Your name: {DataManager.Instance.PlayerName}";
+    UpdateBestScoreText ();
 
     const float step = 0.6f;
     int perLine = Mathf.FloorToInt (4.0f / step);
@@ -79,7 +80,27 @@ public class MainManager : MonoBehaviour
 
   public void GameOver ()
   {
+    SaveData saveData = DataManager.Instance.LoadBestScore ();
+
+    if (saveData == null || m_Points > saveData.bestScore)
+    {
+      DataManager.Instance.SaveBestScore (new SaveData (m_Points, DataManager.Instance.PlayerName));
+    }
+
+    /*else if (m_Points > saveData.bestScore)
+    {
+      DataManager.Instance.SaveBestScore (new SaveData (m_Points, DataManager.Instance.PlayerName));
+    }*/
+
+    UpdateBestScoreText ();
+
     m_GameOver = true;
     GameOverText.SetActive (true);
+  }
+
+  private void UpdateBestScoreText ()
+  {
+    SaveData saveData = DataManager.Instance.LoadBestScore ();
+    bestScoreText.text = saveData == null ? "No best scores yet" : $"Best score: {saveData.name} : {saveData.bestScore}";
   }
 }

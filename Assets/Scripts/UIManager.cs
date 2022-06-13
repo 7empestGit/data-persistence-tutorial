@@ -9,7 +9,8 @@ public class UIManager : MonoBehaviour
 
   void Start ()
   {
-    bestScoreText.text = $"Best Score: ";
+    SaveData saveData = DataManager.Instance.LoadBestScore ();
+    bestScoreText.text = saveData == null ? "No best scores yet" : $"Best score: {saveData.name} : {saveData.bestScore}";
     inputFieldText.text = DataManager.Instance.PlayerName;
   }
 
